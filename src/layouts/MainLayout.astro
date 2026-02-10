@@ -1,0 +1,23 @@
+---
+import '../styles/global.css';
+const { title = "API Aura" } = Astro.props;
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<title>{title}</title>
+	</head>
+	<body class="min-h-screen">
+		<nav class="p-8 flex justify-between items-center max-w-6xl mx-auto">
+			<h1 class="text-2xl font-bold tracking-tight text-aura-dark">API AURA</h1>
+			<div class="h-3 w-3 rounded-full bg-aura-primary animate-ping"></div>
+		</nav>
+		
+		<main class="max-w-6xl mx-auto px-8 py-12">
+			<slot />
+		</main>
+	</body>
+</html>

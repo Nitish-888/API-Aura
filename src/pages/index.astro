@@ -1,0 +1,21 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+import StatusCard from '../components/StatusCard.tsx';
+---
+
+<MainLayout title="Dashboard | API Aura">
+  <header class="space-y-4">
+    <h2 class="text-6xl font-bold text-aura-dark tracking-tight">
+      System <span class="text-aura-slate">Aura</span>.
+    </h2>
+    <p class="text-xl text-aura-slate/80 font-medium max-w-lg">
+      Real-time heartbeat monitoring for your critical digital infrastructure.
+    </p>
+  </header>
+
+  <section class="mt-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <StatusCard client:load name="GitHub" url="https://github.com" />
+    <StatusCard client:load name="Google" url="https://google.com" />
+    <StatusCard client:load name="OpenAI" url="https://api.openai.com" />
+  </section>
+</MainLayout>
