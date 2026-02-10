@@ -9,40 +9,51 @@ export default function StatusCard({ name, url }: Props) {
   const [status, setStatus] = useState<'loading' | 'online' | 'offline'>('loading');
   const [latency, setLatency] = useState<number | null>(null);
 
+  const checkStatus = async () => {
+    const start = performance.now();
+    try {
+      await fetch(url, { mode: 'no-cors' }); 
+      const end = performance.now();
+      setStatus('online');
+      setLatency(Math.round(end - start));
+    } catch (error) {
+      setStatus('offline');
+    }
+  };
+
   useEffect(() => {
-    const checkStatus = async () => {
-      const start = performance.now();
-      try {
-        // 'no-cors' is a simple way to ping without hitting CORS issues for the demo
-        await fetch(url, { mode: 'no-cors' }); 
-        const end = performance.now();
-        setStatus('online');
-        setLatency(Math.round(end - start));
-      } catch (error) {
-        setStatus('offline');
-      }
-    };
     checkStatus();
+    const interval = setInterval(checkStatus, 30000);
+    return () => clearInterval(interval);
   }, [url]);
 
   return (
-    <div className="p-6 rounded-2xl bg-white/30 backdrop-blur-md border border-[#6A89A7]/20 shadow-sm transition-all hover:scale-[1.02]">
+    /* Increased opacity from /25 to /70 for a more solid, premium feel */
+    <div className="p-8 rounded-[2rem] bg-white/70 backdrop-blur-md border border-white/50 shadow-xl shadow-aura-dark/5 transition-all duration-300 hover:-translate-y-1 hover:bg-white/80">
       <div className="flex justify-between items-start">
-        <h3 className="text-xl font-bold text-[#384959] font-sans">{name}</h3>
-        <div className={`h-3 w-3 rounded-full ${
-          status === 'online' ? 'bg-green-400 shadow-[0_0_10px_#4ade80]' : 
-          status === 'offline' ? 'bg-[#CD1C18]' : 'bg-gray-400 animate-pulse'
+        <h3 className="text-xl font-bold text-aura-dark tracking-tight font-sans">
+          {name}
+        </h3>
+        {/* Restored Classic Green and Red Status Indicators */}
+        <div className={`h-2.5 w-2.5 rounded-full ${
+          status === 'online' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 
+          status === 'offline' ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-aura-slate animate-pulse'
         }`}></div>
       </div>
       
-      <div className="mt-8 flex items-end justify-between">
+      <div className="mt-10 flex items-end justify-between">
         <div>
-          <p className="text-[10px] uppercase tracking-widest text-[#6A89A7] font-sans font-bold">Latency</p>
-          <p className="text-2xl font-mono text-[#384959]">
+          <p className="text-[10px] uppercase font-bold tracking-widest text-aura-slate/80 font-sans">
+            Latency
+          </p>
+          <p className="text-2xl font-mono text-aura-dark">
             {latency ? `${latency}ms` : '--'}
           </p>
         </div>
-        <p className={`text-xs font-bold font-sans uppercase ${status === 'online' ? 'text-green-600' : 'text-[#CD1C18]'}`}>
+        <p className={`text-[10px] font-bold uppercase py-1 px-2 rounded-md font-sans ${
+          status === 'online' ? 'bg-green-100 text-green-700' : 
+          status === 'offline' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'
+        }`}>
           {status}
         </p>
       </div>
