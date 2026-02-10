@@ -1,11 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;700&family=Roboto+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
 
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-
-
+@theme {
+  /* Define your "Stormy Morning" colors here so Tailwind v4 sees them */
+  --color-aura-bg: #BDDDFC;
+  --color-aura-primary: #88BDF2;
+  --color-aura-slate: #6A89A7;  
+  --color-aura-dark: #384959;
+  --color-aura-danger: #CD1C18;
+  
+  --font-sans: "Outfit", ui-sans-serif, system-ui;
+  --font-mono: "Roboto Mono", ui-monospace, monospace;
+}
 
 body {
+  /* Now bg-aura-bg will work! */
   @apply bg-aura-bg text-aura-dark font-sans;
 }
