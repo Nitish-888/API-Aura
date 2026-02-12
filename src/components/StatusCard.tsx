@@ -1,61 +1,77 @@
 import { useState, useEffect } from 'react';
 
-interface Props {
+interface StatusCardProps {
   name: string;
   url: string;
 }
 
-export default function StatusCard({ name, url }: Props) {
+export default function StatusCard({ name, url }: StatusCardProps) {
   const [status, setStatus] = useState<'loading' | 'online' | 'offline'>('loading');
-  const [latency, setLatency] = useState<number | null>(null);
-
-  const checkStatus = async () => {
-    const start = performance.now();
-    try {
-      await fetch(url, { mode: 'no-cors' }); 
-      const end = performance.now();
-      setStatus('online');
-      setLatency(Math.round(end - start));
-    } catch (error) {
-      setStatus('offline');
-    }
-  };
+  const [lastChecked, setLastChecked] = useState<Date | null>(null);
 
   useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        // Using 'no-cors' mode to avoid CORS issues for simple heartbeat checks
+        await fetch(url, { mode: 'no-cors' });
+        setStatus('online');
+        setLastChecked(new Date());
+      } catch (error) {
+        setStatus('offline');
+        console.error(`Error checking ${name}:`, error);
+      }
+    };
+
     checkStatus();
-    const interval = setInterval(checkStatus, 30000);
+    const interval = setInterval(checkStatus, 30000); // Check every 30 seconds
+
     return () => clearInterval(interval);
-  }, [url]);
+  }, [url, name]);
+
+  const formatTime = (date: Date | null) => {
+    if (!date) return '--:--';
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  };
 
   return (
-    /* Increased opacity from /25 to /70 for a more solid, premium feel */
-    <div className="p-8 rounded-[2rem] bg-white/70 backdrop-blur-md border border-white/50 shadow-xl shadow-aura-dark/5 transition-all duration-300 hover:-translate-y-1 hover:bg-white/80">
+    <div className="p-8 rounded-[2rem] bg-white/70 backdrop-blur-xl border border-white/50 shadow-xl shadow-aura-dark/5 flex flex-col justify-between min-h-[200px] transition-all hover:scale-[1.02]">
       <div className="flex justify-between items-start">
-        <h3 className="text-xl font-bold text-aura-dark tracking-tight font-sans">
-          {name}
-        </h3>
-        {/* Restored Classic Green and Red Status Indicators */}
-        <div className={`h-2.5 w-2.5 rounded-full ${
-          status === 'online' ? 'bg-green-500 shadow-[0_0_10px_#22c55e]' : 
-          status === 'offline' ? 'bg-red-500 shadow-[0_0_10px_#ef4444]' : 'bg-aura-slate animate-pulse'
-        }`}></div>
-      </div>
-      
-      <div className="mt-10 flex items-end justify-between">
         <div>
-          <p className="text-[10px] uppercase font-bold tracking-widest text-aura-slate/80 font-sans">
-            Latency
-          </p>
-          <p className="text-2xl font-mono text-aura-dark">
-            {latency ? `${latency}ms` : '--'}
+          <h3 className="text-2xl font-bold text-aura-dark tracking-tight">{name}</h3>
+          <p className="text-sm text-aura-slate font-mono mt-1 opacity-60 truncate max-w-[150px]">
+            {url.replace('https://', '')}
           </p>
         </div>
-        <p className={`text-[10px] font-bold uppercase py-1 px-2 rounded-md font-sans ${
-          status === 'online' ? 'bg-green-100 text-green-700' : 
-          status === 'offline' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600'
+        <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+          status === 'online' ? 'bg-green-100 text-green-600' : 
+          status === 'offline' ? 'bg-red-100 text-aura-danger' : 
+          'bg-gray-100 text-aura-slate'
         }`}>
+          <div className={`h-2 w-2 rounded-full ${
+            status === 'online' ? 'bg-green-500 animate-pulse' : 
+            status === 'offline' ? 'bg-aura-danger' : 
+            'bg-aura-slate animate-pulse'
+          }`}></div>
           {status}
-        </p>
+        </div>
+      </div>
+
+      <div className="mt-8 pt-4 border-t border-aura-dark/5 flex justify-between items-end">
+        <div className="flex flex-col">
+          <span className="text-[10px] uppercase tracking-widest text-aura-slate font-bold opacity-50">Last Heartbeat</span>
+          <span className="text-lg font-mono font-medium text-aura-dark">
+            {formatTime(lastChecked)}
+          </span>
+        </div>
+        <div className="h-8 w-12 bg-aura-bg/30 rounded-lg flex items-center justify-center">
+           {/* Tiny sparkline placeholder for visual flair */}
+           <div className="flex gap-0.5 items-end">
+              <div className="w-1 bg-aura-primary h-2"></div>
+              <div className="w-1 bg-aura-primary h-4"></div>
+              <div className="w-1 bg-aura-primary h-3"></div>
+              <div className="w-1 bg-aura-primary h-5"></div>
+           </div>
+        </div>
       </div>
     </div>
   );
