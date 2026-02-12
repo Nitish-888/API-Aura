@@ -1,24 +1,24 @@
 ---
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
 import '../styles/global.css';
-const { title = "API Aura" } = Astro.props;
 ---
 
+<!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>{title}</title>
-	</head>
-	<body class="selection:bg-aura-primary selection:text-white">
-		<nav class="p-10 flex justify-between items-center max-w-7xl mx-auto">
-			<h1 class="text-xl font-bold tracking-tighter text-aura-dark opacity-70">API AURA</h1>
-			<div class="h-1.5 w-1.5 rounded-full bg-aura-primary"></div>
-		</nav>
-
-		<main class="max-w-7xl mx-auto px-10 pb-20">
-			<slot />
-		</main>
-	</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+  </head>
+  <body class="bg-aura-bg">
+    <main class="max-w-7xl mx-auto px-6 md:px-12">
+      <slot />
+    </main>
+  </body>
 </html>

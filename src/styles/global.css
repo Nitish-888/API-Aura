@@ -14,4 +14,14 @@
 
 body {
   @apply bg-aura-bg text-aura-dark font-sans min-h-screen;
+
+.preserve-3d {
+  perspective: 1000px;
 }
+
+.backface-hidden {
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+}
+}
+
