@@ -6,7 +6,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent // FIX: Type-only import for verbatimModuleSyntax
+  type DragEndEvent 
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -72,12 +72,51 @@ export default function Dashboard() {
     localStorage.setItem('aura-projects', JSON.stringify(updated));
   };
 
+  // Export Projects to JSON
+  const exportProjects = () => {
+    const dataStr = JSON.stringify(projects, null, 2);
+    const dataBlob = new Blob([dataStr], { type: 'application/json' });
+    const downloadUrl = URL.createObjectURL(dataBlob);
+    
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = `aura-backup-${new Date().toISOString().split('T')[0]}.json`;
+    link.click();
+    URL.revokeObjectURL(downloadUrl);
+  };
+
+  // Import Projects from JSON
+  const importProjects = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const imported = JSON.parse(event.target?.result as string);
+        if (Array.isArray(imported)) {
+          setProjects((current) => {
+            const existingUrls = new Set(current.map(p => p.url));
+            const newOnes = imported.filter(p => !existingUrls.has(p.url));
+            const combined = [...current, ...newOnes];
+            localStorage.setItem('aura-projects', JSON.stringify(combined));
+            return combined;
+          });
+          alert(`Successfully processed file. Added new projects found.`);
+        }
+      } catch (err) {
+        alert("Error reading backup file. Please ensure it is a valid JSON.");
+      }
+    };
+    reader.readAsText(file);
+    e.target.value = ''; // Reset input
+  };
+
   const filteredProjects = projects.filter(p => 
     p.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   return (
-    /* Added pb-32 to create space at the bottom of the screen */
     <div className="space-y-12 pb-32">
       {/* Search & Add Section */}
       <div className="bg-white/40 backdrop-blur-md p-8 rounded-[2.5rem] border border-white/60 shadow-xl">
@@ -95,6 +134,26 @@ export default function Dashboard() {
             Add Project
           </button>
         </form>
+
+        {/* Backup Actions */}
+        <div className="flex gap-4 mt-6 pt-6 border-t border-aura-dark/5">
+          <button 
+            onClick={exportProjects}
+            className="flex items-center gap-2 px-6 py-3 bg-white/60 text-aura-dark rounded-xl font-bold hover:bg-white transition-all border border-white/40 shadow-sm"
+          >
+            📤 Export JSON
+          </button>
+          
+          <label className="flex items-center gap-2 px-6 py-3 bg-aura-primary/20 text-aura-dark rounded-xl font-bold hover:bg-aura-primary/30 transition-all border border-aura-primary/20 cursor-pointer shadow-sm">
+            📥 Import JSON
+            <input 
+              type="file" 
+              accept=".json" 
+              onChange={importProjects} 
+              className="hidden" 
+            />
+          </label>
+        </div>
       </div>
 
       {/* Grid with Drag and Drop */}
