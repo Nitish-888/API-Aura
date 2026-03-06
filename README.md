@@ -1,46 +1,45 @@
-# Astro Starter Kit: Basics
+# 🌌 A P I . A U R A
+> **The Stormy Morning Dashboard.** A high-fidelity, 3-dimensional monitoring suite for mission-critical endpoints.
 
-```sh
-npm create astro@latest -- --template basics
-```
+---
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+### ⌈ THE PHILOSOPHY ⌋
+Most monitors are spreadsheets in disguise. **API Aura** is a workspace. It treats endpoints as physical objects—tactile, movable, and interactive. Built with the **Stormy Morning** design system, it’s designed to be open on a vertical monitor while you work, providing a calm but constant heartbeat of your distributed systems.
 
-## 🚀 Project Structure
+### ⌈ CORE ARCHITECTURE ⌋
+| Component | Tech | Purpose |
+| :--- | :--- | :--- |
+| **Engine** | `Astro + React` | Island architecture for zero-lag UI. |
+| **Logic** | `TypeScript` | Verbatim type safety for endpoint streams. |
+| **Aesthetics** | `Tailwind v4` | Modern CSS variables & 3D perspectives. |
+| **Interactivity**| `dnd-kit` | Frictionless drag-and-drop workspace reordering. |
 
-Inside of your Astro project, you'll see the following folders and files:
+---
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+### ⌈ FUNCTIONAL CAPABILITIES ⌋
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+**01. TACTILE INTERFACE**
+Cards aren't just divs. They exist in 3D space. Flip them to reveal raw endpoint data, or drag them to prioritize your stack. The `perspective-1000` CSS engine ensures every movement feels weighted and intentional.
 
-## 🧞 Commands
+**02. THE HEARTBEAT**
+A non-blocking polling system that monitors latency in real-time. Each card pulses with a "Stormy" glow—Green for healthy, Red for critical—giving you an instant "vibe check" of your entire infrastructure.
 
-All commands are run from the root of the project, from a terminal:
+**03. PERSISTENT WORKSPACE**
+Your layout is your own. Using custom `localStorage` synchronization, your pins, reorders, and API lists persist across sessions. 
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+**04. DATA PORTABILITY**
+Export your entire monitoring configuration as a `.json` backup. Import it on a new machine. No backend required, no data leakage—your endpoints stay in your browser.
 
-## 👀 Want to learn more?
+---
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+### ⌈ SETUP THE VOID ⌋
+
+```bash
+# Clone the aura
+git clone [https://github.com/your-username/api-aura.git](https://github.com/your-username/api-aura.git)
+
+# Initialize dependencies
+npm install
+
+# Invoke the development server
+npm run dev
