@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import {
-  DndContext, 
+  DndContext,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
   useSensor,
   useSensors,
-  type DragEndEvent 
+  type DragEndEvent
 } from '@dnd-kit/core';
 import {
   arrayMove,
@@ -20,6 +20,7 @@ interface Project {
   name: string;
   url: string;
   isPinned?: boolean;
+  history?: number[];
 }
 
 export default function Dashboard() {
@@ -77,7 +78,7 @@ export default function Dashboard() {
     const dataStr = JSON.stringify(projects, null, 2);
     const dataBlob = new Blob([dataStr], { type: 'application/json' });
     const downloadUrl = URL.createObjectURL(dataBlob);
-    
+
     const link = document.createElement('a');
     link.href = downloadUrl;
     link.download = `aura-backup-${new Date().toISOString().split('T')[0]}.json`;
@@ -112,7 +113,7 @@ export default function Dashboard() {
     e.target.value = ''; // Reset input
   };
 
-  const filteredProjects = projects.filter(p => 
+  const filteredProjects = projects.filter(p =>
     p.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
@@ -137,20 +138,20 @@ export default function Dashboard() {
 
         {/* Backup Actions */}
         <div className="flex gap-4 mt-6 pt-6 border-t border-aura-dark/5">
-          <button 
+          <button
             onClick={exportProjects}
             className="flex items-center gap-2 px-6 py-3 bg-white/60 text-aura-dark rounded-xl font-bold hover:bg-white transition-all border border-white/40 shadow-sm"
           >
             📤 Export JSON
           </button>
-          
+
           <label className="flex items-center gap-2 px-6 py-3 bg-aura-primary/20 text-aura-dark rounded-xl font-bold hover:bg-aura-primary/30 transition-all border border-aura-primary/20 cursor-pointer shadow-sm">
             📥 Import JSON
-            <input 
-              type="file" 
-              accept=".json" 
-              onChange={importProjects} 
-              className="hidden" 
+            <input
+              type="file"
+              accept=".json"
+              onChange={importProjects}
+              className="hidden"
             />
           </label>
         </div>
@@ -161,17 +162,17 @@ export default function Dashboard() {
         <SortableContext items={filteredProjects.map(p => p.url)} strategy={rectSortingStrategy}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProjects.map((project) => (
-              <SortableCard 
-                key={project.url} 
-                project={project} 
-                togglePin={togglePin} 
-                deleteProject={deleteProject} 
+              <SortableCard
+                key={project.url}
+                project={project}
+                togglePin={togglePin}
+                deleteProject={deleteProject}
               />
             ))}
           </div>
         </SortableContext>
       </DndContext>
-      
+
       {/* Empty State */}
       {filteredProjects.length === 0 && (
         <div className="text-center py-20 bg-white/20 rounded-[3rem] border-2 border-dashed border-white/40">
